@@ -2,7 +2,7 @@
 
 Teeket est une base de SaaS B2B de support informatique pour PME, consultants IT, MSP et équipes internes. Ce dépôt prépare un MVP multi-tenant autour des tickets, de l'inventaire machine, de la connaissance, de l'IA et des playbooks d'AutoFix.
 
-Cette première version fournit l'architecture et les garde-fous essentiels. L'authentification réelle, les parcours métier complets et l'agent poste de travail restent à implémenter.
+Cette première version fournit l'architecture, les garde-fous essentiels et une première verticale métier complète pour gérer les tickets. L'authentification réelle et l'agent poste de travail restent à implémenter.
 
 ## Prérequis
 
@@ -38,6 +38,18 @@ Services locaux :
 - PostgreSQL : `localhost:5432`
 
 Le seed crée une organisation `acme-demo`, un administrateur de démonstration, une machine et un ticket. Aucun mot de passe n'est créé tant que l'authentification n'est pas implémentée.
+
+Pour tester les écrans tickets avant l'ajout du JWT, créez `apps/web/.env.local` et recopiez les identifiants affichés par `pnpm db:seed` :
+
+```dotenv
+NEXT_PUBLIC_API_URL=/api
+NEXT_PUBLIC_ORGANIZATION_ID=<organization-id>
+NEXT_PUBLIC_DEMO_USER_ID=<user-id>
+```
+
+Si le navigateur Windows accède à Next.js via l'adresse IP WSL, ajoutez aussi `DEV_ORIGIN=<adresse-ip-wsl>`. Obtenez cette adresse avec `hostname -I`.
+
+En mode `development` uniquement, l'API résout `x-demo-user-id` en base. Le contrôle d'appartenance à l'organisation reste appliqué par `TenantGuard`. Ce pont local est désactivé en production.
 
 ## Commandes utiles
 
@@ -91,7 +103,19 @@ L'API applique trois guards globaux :
 2. `TenantGuard` exige `x-organization-id` sur les routes marquées `@TenantScoped()` et vérifie l'appartenance en base.
 3. `RolesGuard` vérifie les rôles lorsqu'une route déclare `@Roles(...)`.
 
-Les endpoints `GET /api/tickets` et `GET /api/machines` illustrent ce filtrage. Le futur mécanisme JWT devra hydrater `request.user`; il ne devra jamais accepter un tenant fourni par le client sans validation serveur.
+Les endpoints tickets et `GET /api/machines` appliquent ce filtrage. Le futur mécanisme JWT devra hydrater `request.user`; il ne devra jamais accepter un tenant fourni par le client sans validation serveur.
+
+## API tickets
+
+| Méthode | Route                             | Description                         |
+| ------- | --------------------------------- | ----------------------------------- |
+| `POST`  | `/api/tickets`                    | Crée un ticket                      |
+| `GET`   | `/api/tickets`                    | Liste les tickets du tenant         |
+| `GET`   | `/api/tickets/:ticketId`          | Affiche le détail d'un ticket       |
+| `PATCH` | `/api/tickets/:ticketId/status`   | Modifie le statut                   |
+| `PATCH` | `/api/tickets/:ticketId/priority` | Modifie la priorité                 |
+| `PATCH` | `/api/tickets/:ticketId/assignee` | Assigne ou désassigne un technicien |
+| `POST`  | `/api/tickets/:ticketId/comments` | Ajoute un commentaire               |
 
 ## Variables d'environnement
 
@@ -106,11 +130,6 @@ Les secrets de production ne doivent jamais être committés. Utilisez les secre
 
 ## Prochaines étapes
 
-1. Implémenter l'authentification avec hash de mot de passe, JWT court, refresh token rotatif et récupération de mot de passe.
-2. Ajouter les CRUD tickets et machines avec DTO validés et tests d'isolation tenant.
-3. Ajouter l'audit des mutations sensibles.
-4. Définir le protocole sécurisé de l'agent machine.
-5. Brancher les suggestions IA avec journalisation, contrôle des coûts et validation humaine.
-6. Exécuter les AutoFix dans un worker isolé avec actions autorisées explicitement.
+La checklist de développement est maintenue dans [docs/roadmap.md](docs/roadmap.md). Le prochain jalon est de publier et fusionner la verticale tickets, puis d'implémenter l'authentification réelle.
 
-Consultez [docs/architecture.md](docs/architecture.md) et [docs/security.md](docs/security.md) avant d'ajouter des fonctionnalités métier.
+Consultez également [docs/architecture.md](docs/architecture.md), [docs/security.md](docs/security.md) et [docs/github-workflow.md](docs/github-workflow.md) avant d'ajouter une fonctionnalité métier.
