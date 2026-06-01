@@ -74,7 +74,8 @@ async function main(): Promise<void> {
     });
   }
 
-  console.log(`Seeded development organization: ${organization.slug}`);
+  console.log(`Seeded development organization: ${organization.slug} (${organization.id})`);
+  console.log(`Seeded development user: ${admin.email} (${admin.id})`);
 }
 
 main()
