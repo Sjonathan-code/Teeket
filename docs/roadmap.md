@@ -31,7 +31,8 @@ Cette roadmap est la checklist de livraison de Teeket. Une case fonctionnelle es
 - [x] Tester l'isolation tenant et les mutations principales
 - [x] Ajouter les pages web liste, création et détail
 - [x] Publier la pull request `feat/tickets-core`
-- [ ] Faire passer la CI GitHub et fusionner dans `main`
+- [x] Faire passer la CI GitHub
+- [ ] Fusionner la pull request dans `main`
 
 ### Authentification
 
