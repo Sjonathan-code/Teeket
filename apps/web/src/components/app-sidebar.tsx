@@ -1,4 +1,8 @@
+'use client';
+
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { authApi, clearSession } from '../lib/auth-api';
 
 const links = [
   { href: '/dashboard', label: 'Vue d’ensemble' },
@@ -7,6 +11,17 @@ const links = [
 ];
 
 export function AppSidebar(): React.ReactElement {
+  const router = useRouter();
+
+  async function logout(): Promise<void> {
+    try {
+      await authApi.logout();
+    } finally {
+      clearSession();
+      router.push('/login');
+    }
+  }
+
   return (
     <aside className="flex min-h-screen w-64 flex-col border-r border-slate-200 bg-white px-5 py-6">
       <Link className="text-xl font-bold tracking-tight text-ink" href="/dashboard">
@@ -28,9 +43,13 @@ export function AppSidebar(): React.ReactElement {
         ))}
       </nav>
 
-      <div className="mt-auto rounded-lg bg-slate-50 px-3 py-3 text-xs text-slate-500">
-        Espace de démonstration
-      </div>
+      <button
+        className="mt-auto rounded-lg bg-slate-50 px-3 py-3 text-left text-xs font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-ink"
+        onClick={() => void logout()}
+        type="button"
+      >
+        Se déconnecter
+      </button>
     </aside>
   );
 }

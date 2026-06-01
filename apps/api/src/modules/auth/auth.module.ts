@@ -1,11 +1,14 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { DevelopmentAuthMiddleware } from './development-auth.middleware';
+import { AccessTokenMiddleware } from './access-token.middleware';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 
 @Module({
-  providers: [DevelopmentAuthMiddleware],
+  controllers: [AuthController],
+  providers: [AccessTokenMiddleware, AuthService],
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(DevelopmentAuthMiddleware).forRoutes('{*path}');
+    consumer.apply(AccessTokenMiddleware).forRoutes('{*path}');
   }
 }

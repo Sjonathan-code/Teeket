@@ -2,6 +2,7 @@ interface Environment {
   API_PORT: number;
   API_PREFIX: string;
   DATABASE_URL: string;
+  JWT_SECRET: string;
   NODE_ENV: 'development' | 'test' | 'production';
 }
 
@@ -11,6 +12,7 @@ export function validateEnvironment(config: Record<string, unknown>): Environmen
   const apiPort = Number(config.API_PORT ?? 3001);
   const apiPrefix = String(config.API_PREFIX ?? 'api');
   const databaseUrl = String(config.DATABASE_URL ?? '');
+  const jwtSecret = String(config.JWT_SECRET ?? '');
   const nodeEnvironment = String(config.NODE_ENV ?? 'development');
 
   if (!Number.isInteger(apiPort) || apiPort < 1 || apiPort > 65535) {
@@ -25,6 +27,10 @@ export function validateEnvironment(config: Record<string, unknown>): Environmen
     throw new Error('DATABASE_URL must be a PostgreSQL connection string.');
   }
 
+  if (jwtSecret.length < 32) {
+    throw new Error('JWT_SECRET must contain at least 32 characters.');
+  }
+
   if (!supportedNodeEnvironments.includes(nodeEnvironment as Environment['NODE_ENV'])) {
     throw new Error('NODE_ENV must be development, test or production.');
   }
@@ -33,6 +39,7 @@ export function validateEnvironment(config: Record<string, unknown>): Environmen
     API_PORT: apiPort,
     API_PREFIX: apiPrefix,
     DATABASE_URL: databaseUrl,
+    JWT_SECRET: jwtSecret,
     NODE_ENV: nodeEnvironment as Environment['NODE_ENV'],
   };
 }
