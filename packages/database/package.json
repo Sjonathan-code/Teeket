@@ -5,11 +5,12 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "prisma generate && tsc -p tsconfig.json",
+    "build": "pnpm run generate && tsc -p tsconfig.json",
+    "generate": "prisma generate --schema prisma/schema.prisma",
     "lint": "eslint \"src/**/*.ts\" \"prisma/**/*.ts\"",
     "test": "echo \"No database package tests yet\"",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "db:generate": "dotenv -e ../../.env -- prisma generate",
+    "db:generate": "pnpm run generate",
     "db:migrate": "dotenv -e ../../.env -- prisma migrate dev",
     "db:seed": "dotenv -e ../../.env -- prisma db seed",
     "db:studio": "dotenv -e ../../.env -- prisma studio"

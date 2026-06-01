@@ -1,6 +1,15 @@
 import { PrismaClient, TicketCategory, TicketPriority, UserRole } from '@prisma/client';
+import { randomBytes, scryptSync } from 'node:crypto';
 
 const prisma = new PrismaClient();
+const demoPassword = 'TeeketDemo123!';
+
+function hashPassword(password: string): string {
+  const salt = randomBytes(16).toString('hex');
+  const derivedKey = scryptSync(password, salt, 64);
+
+  return `scrypt$${salt}$${derivedKey.toString('hex')}`;
+}
 
 async function main(): Promise<void> {
   const organization = await prisma.organization.upsert({
@@ -14,11 +23,12 @@ async function main(): Promise<void> {
 
   const admin = await prisma.user.upsert({
     where: { email: 'admin@acme-demo.test' },
-    update: {},
+    update: { passwordHash: hashPassword(demoPassword) },
     create: {
       email: 'admin@acme-demo.test',
       firstName: 'Alex',
       lastName: 'Admin',
+      passwordHash: hashPassword(demoPassword),
     },
   });
 
@@ -76,6 +86,7 @@ async function main(): Promise<void> {
 
   console.log(`Seeded development organization: ${organization.slug} (${organization.id})`);
   console.log(`Seeded development user: ${admin.email} (${admin.id})`);
+  console.log(`Seeded development password: ${demoPassword}`);
 }
 
 main()

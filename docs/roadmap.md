@@ -4,9 +4,9 @@ Cette roadmap est la checklist de livraison de Teeket. Une case fonctionnelle es
 
 ## État actuel
 
-- Branche de travail : `feat/tickets-core`
-- Prochain jalon : publier et fusionner la verticale tickets
-- Prochaine verticale métier : authentification réelle
+- Branche de travail : `feat/auth-core`
+- Prochain jalon : valider et publier la verticale authentification
+- Prochaine verticale métier : organisations et utilisateurs
 
 ## Phase 1 - Fondation
 
@@ -36,12 +36,14 @@ Cette roadmap est la checklist de livraison de Teeket. Une case fonctionnelle es
 
 ### Authentification
 
-- [ ] Ajouter le hash de mot de passe
-- [ ] Ajouter la connexion avec JWT court
-- [ ] Ajouter le refresh token rotatif
-- [ ] Ajouter la déconnexion et la récupération de mot de passe
-- [ ] Remplacer le middleware local `x-demo-user-id`
-- [ ] Tester l'authentification et les refus d'accès
+- [x] Ajouter le hash de mot de passe
+- [x] Ajouter la connexion avec JWT court
+- [x] Ajouter le refresh token rotatif
+- [x] Ajouter la déconnexion et la récupération de mot de passe
+- [x] Remplacer le middleware local `x-demo-user-id`
+- [x] Tester l'authentification et les refus d'accès
+- [ ] Publier la pull request `feat/auth-core`
+- [ ] Faire passer la CI GitHub et fusionner dans `main`
 
 ### Organisations et utilisateurs
 

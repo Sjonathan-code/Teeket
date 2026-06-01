@@ -73,21 +73,23 @@ model Organization {
 }
 
 model User {
-  id                   String             @id @default(uuid())
-  email                String             @unique
-  passwordHash         String?
-  firstName            String?
-  lastName             String?
-  isActive             Boolean            @default(true)
-  createdAt            DateTime           @default(now())
-  updatedAt            DateTime           @updatedAt
-  memberships          Membership[]
-  requestedTickets     Ticket[]           @relation("TicketRequester")
-  assignedTickets      Ticket[]           @relation("TicketAssignee")
-  ticketComments       TicketComment[]
-  authoredArticles     KnowledgeArticle[]
+  id                    String               @id @default(uuid())
+  email                 String               @unique
+  passwordHash          String?
+  firstName             String?
+  lastName              String?
+  isActive              Boolean              @default(true)
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  memberships           Membership[]
+  requestedTickets      Ticket[]             @relation("TicketRequester")
+  assignedTickets       Ticket[]             @relation("TicketAssignee")
+  ticketComments        TicketComment[]
+  authoredArticles      KnowledgeArticle[]
   triggeredPlaybookRuns PlaybookRun[]
-  auditLogs            AuditLog[]
+  auditLogs             AuditLog[]
+  refreshTokens         RefreshToken[]
+  passwordResetTokens   PasswordResetToken[]
 }
 
 model Membership {
@@ -106,22 +108,22 @@ model Membership {
 }
 
 model Ticket {
-  id             String         @id @default(uuid())
+  id             String          @id @default(uuid())
   organizationId String
   requesterId    String
   assigneeId     String?
   machineId      String?
   title          String
   description    String
-  status         TicketStatus   @default(OPEN)
-  priority       TicketPriority @default(MEDIUM)
-  category       TicketCategory @default(OTHER)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  requester      User           @relation("TicketRequester", fields: [requesterId], references: [id])
-  assignee       User?          @relation("TicketAssignee", fields: [assigneeId], references: [id])
-  machine        Machine?       @relation(fields: [machineId], references: [id])
+  status         TicketStatus    @default(OPEN)
+  priority       TicketPriority  @default(MEDIUM)
+  category       TicketCategory  @default(OTHER)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  requester      User            @relation("TicketRequester", fields: [requesterId], references: [id])
+  assignee       User?           @relation("TicketAssignee", fields: [assigneeId], references: [id])
+  machine        Machine?        @relation(fields: [machineId], references: [id])
   comments       TicketComment[]
   aiSuggestions  AiSuggestion[]
   playbookRuns   PlaybookRun[]
@@ -148,20 +150,20 @@ model TicketComment {
 }
 
 model Machine {
-  id             String            @id @default(uuid())
-  organizationId String
-  hostname       String
-  serialNumber   String?
+  id              String            @id @default(uuid())
+  organizationId  String
+  hostname        String
+  serialNumber    String?
   operatingSystem String?
-  agentVersion   String?
-  status         MachineStatus     @default(UNKNOWN)
-  lastSeenAt     DateTime?
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
-  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  tickets        Ticket[]
-  snapshots      MachineSnapshot[]
-  playbookRuns   PlaybookRun[]
+  agentVersion    String?
+  status          MachineStatus     @default(UNKNOWN)
+  lastSeenAt      DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  organization    Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  tickets         Ticket[]
+  snapshots       MachineSnapshot[]
+  playbookRuns    PlaybookRun[]
 
   @@unique([organizationId, hostname])
   @@index([organizationId, status])
@@ -282,4 +284,28 @@ model AuditLog {
 
   @@index([organizationId, createdAt])
   @@index([organizationId, entityType, entityId])
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
 }

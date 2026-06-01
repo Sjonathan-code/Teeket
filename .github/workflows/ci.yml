@@ -13,6 +13,7 @@ jobs:
       API_PORT: 3001
       API_PREFIX: api
       NODE_ENV: test
+      JWT_SECRET: teeket_ci_only_secret_at_least_32_characters
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,8 +29,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Generate Prisma client
+      - name: Generate Prisma client from project schema
         run: pnpm db:generate
 
-      - name: Verify
-        run: pnpm lint && pnpm typecheck && pnpm test && pnpm build
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
