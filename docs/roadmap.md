@@ -32,7 +32,7 @@ Cette roadmap est la checklist de livraison de Teeket. Une case fonctionnelle es
 - [x] Ajouter les pages web liste, création et détail
 - [x] Publier la pull request `feat/tickets-core`
 - [x] Faire passer la CI GitHub
-- [ ] Fusionner la pull request dans `main`
+- [x] Fusionner la pull request dans `main`
 
 ### Authentification
 
