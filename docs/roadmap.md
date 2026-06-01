@@ -30,7 +30,7 @@ Cette roadmap est la checklist de livraison de Teeket. Une case fonctionnelle es
 - [x] Auditer la création, le changement de statut et l'ajout de commentaire
 - [x] Tester l'isolation tenant et les mutations principales
 - [x] Ajouter les pages web liste, création et détail
-- [ ] Publier la pull request `feat/tickets-core`
+- [x] Publier la pull request `feat/tickets-core`
 - [ ] Faire passer la CI GitHub et fusionner dans `main`
 
 ### Authentification
