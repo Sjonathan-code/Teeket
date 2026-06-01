@@ -54,12 +54,12 @@ Connectez-vous avec `admin@acme-demo.test` et le mot de passe affiché par `pnpm
 | Commande           | Description                                     |
 | ------------------ | ----------------------------------------------- |
 | `pnpm dev`         | Démarre les applications en mode développement  |
-| `pnpm build`       | Compile tous les workspaces                     |
+| `pnpm build`       | Génère Prisma et compile tous les workspaces    |
 | `pnpm lint`        | Lance ESLint                                    |
 | `pnpm typecheck`   | Vérifie les types TypeScript                    |
 | `pnpm test`        | Lance les tests                                 |
 | `pnpm format`      | Formate les fichiers avec Prettier              |
-| `pnpm db:generate` | Génère le client Prisma                         |
+| `pnpm db:generate` | Génère le client Prisma depuis le schéma projet |
 | `pnpm db:migrate`  | Crée ou applique une migration de développement |
 | `pnpm db:seed`     | Charge les données de démonstration             |
 | `pnpm db:studio`   | Ouvre Prisma Studio                             |

@@ -8,14 +8,14 @@
     "pnpm": ">=9.0.0"
   },
   "scripts": {
-    "build": "turbo run build",
+    "build": "pnpm db:generate && turbo run build",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "db:generate": "pnpm --filter @teeket/database db:generate",
+    "db:generate": "pnpm --filter @teeket/database generate",
     "db:migrate": "pnpm --filter @teeket/database db:migrate",
     "db:seed": "pnpm --filter @teeket/database db:seed",
     "db:studio": "pnpm --filter @teeket/database db:studio"
